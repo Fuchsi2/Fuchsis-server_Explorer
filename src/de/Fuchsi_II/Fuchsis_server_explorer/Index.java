@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import de.Fuchsi_II.Fuchsis_server_explorer.Index;
@@ -31,11 +32,13 @@ public class Index extends JFrame{
 	//just there to remove warning
 	private static final long serialVersionUID = 1L;
 	
-	String version = "1.0";
+	String version = "1.1";
 	boolean update = false;
+	String ghversion = "";
 	
 	Gson gson = new Gson();
 	JsonObject json;
+	JsonArray vjson;
 	
 	//create windows items
 	JPanel jpPanel = new JPanel();
@@ -49,7 +52,7 @@ public class Index extends JFrame{
 	
 	public Index(){
 		super();
-		this.setTitle("Minecraft assets explorer by Fuchsi_II");
+		this.setTitle("Fuchsis-server Explorer V" + version);
 		this.setSize(700,600);
 		try {
 			FensterAufbauen();
@@ -135,7 +138,7 @@ public class Index extends JFrame{
 				}else {
 					if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 					    try {
-							Desktop.getDesktop().browse(new URI("https://home.mycloud.com/action/share/bcb58c65-d59c-47d4-8505-067613cd1154"));
+							Desktop.getDesktop().browse(new URI("https://github.com/Fuchsi2/Fuchsis-server_Explorer/releases/tag/" + ghversion));
 						} catch (IOException | URISyntaxException e) {
 							e.printStackTrace();
 						}
@@ -144,8 +147,8 @@ public class Index extends JFrame{
 			}
 		});
 		
-		//check version
-		String vurl = "http://207.180.246.155/FSE_version.txt";
+		//check for update on github
+		String vurl = "https://api.github.com/repos/Fuchsi2/Fuchsis-server_Explorer/releases";
 	    URL vobj = new URL(vurl);
 	    HttpURLConnection vcon = (HttpURLConnection) vobj.openConnection();
 	    // optional default is GET
@@ -164,7 +167,10 @@ public class Index extends JFrame{
 	    	vresponse.append(vinputLine);
 	    }
 	    vin.close();
-	    if (vresponse.toString() != version) {
+	    String vtojson = vresponse.toString();
+	    vjson = gson.fromJson(vtojson, JsonArray.class);
+	    ghversion = vjson.get(0).getAsJsonObject().get("tag_name").getAsString();
+	    if (ghversion != version) {
 	    	lblerr.setText("Neue version verfügbar! bitte lade dir die neue version herunter.");
 	    	update = true;
 	    	btnopendef.setText("Update herunterladen");

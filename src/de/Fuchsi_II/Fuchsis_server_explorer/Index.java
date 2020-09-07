@@ -32,7 +32,7 @@ public class Index extends JFrame{
 	//just there to remove warning
 	private static final long serialVersionUID = 1L;
 	
-	String version = "1.1";
+	String version = "1.1.1";
 	boolean update = false;
 	String ghversion = "";
 	
@@ -151,16 +151,13 @@ public class Index extends JFrame{
 		String vurl = "https://api.github.com/repos/Fuchsi2/Fuchsis-server_Explorer/releases";
 	    URL vobj = new URL(vurl);
 	    HttpURLConnection vcon = (HttpURLConnection) vobj.openConnection();
-	    // optional default is GET
 	    vcon.setRequestMethod("GET");
-	    //add request header
 	    vcon.setRequestProperty("User-Agent", "Mozilla/5.0");
 	    int vresponseCode = vcon.getResponseCode();
 	    if (vresponseCode != 200) {
 	    	lblerr.setText("Server antwortete mit status " + vresponseCode + ". Es ist möglicherweise ein fehler aufgetreten");
 	    }
-	    BufferedReader vin = new BufferedReader(
-	            new InputStreamReader(vcon.getInputStream()));
+	    BufferedReader vin = new BufferedReader(new InputStreamReader(vcon.getInputStream()));
 	    String vinputLine;
 	    StringBuffer vresponse = new StringBuffer();
 	    while ((vinputLine = vin.readLine()) != null) {
@@ -168,9 +165,10 @@ public class Index extends JFrame{
 	    }
 	    vin.close();
 	    String vtojson = vresponse.toString();
+	    System.out.println(vtojson);
 	    vjson = gson.fromJson(vtojson, JsonArray.class);
 	    ghversion = vjson.get(0).getAsJsonObject().get("tag_name").getAsString();
-	    if (ghversion != version) {
+	    if (!ghversion.contentEquals(version)) {
 	    	lblerr.setText("Neue version verfügbar! bitte lade dir die neue version herunter.");
 	    	update = true;
 	    	btnopendef.setText("Update herunterladen");

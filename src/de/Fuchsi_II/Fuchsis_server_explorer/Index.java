@@ -138,7 +138,7 @@ public class Index extends JFrame{
 				}else {
 					if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 					    try {
-							Desktop.getDesktop().browse(new URI("https://github.com/Fuchsi2/Fuchsis-server_Explorer/releases/tag/" + ghversion + "/Fuchsis-server_explorer.jar"));
+							Desktop.getDesktop().browse(new URI("https://github.com/Fuchsi2/Fuchsis-server_Explorer/releases/download/" + ghversion + "/Fuchsis-server_explorer.jar"));
 						} catch (IOException | URISyntaxException e) {
 							e.printStackTrace();
 						}
